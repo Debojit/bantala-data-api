@@ -2,10 +2,10 @@
 
 const express = require('express');
 
-const {upload} = require('../controllers/import');
+const {upload, salesFile} = require('../controllers/upload');
 
 const router = express.Router();
 
-router.post('/upload', upload);
+router.post('/upload', salesFile.single('salesData'), upload);
 
 module.exports = router;
