@@ -17,6 +17,7 @@ async function upload(req, res) {
     const filePath = req.file.path;
     const salesWorkbook = await bulkLoad.readFile(filePath);
     const headers = await bulkLoad.getHeaders(salesWorkbook.worksheets[0]);
+    bulkLoad.deleteFile(filePath);
     res.json(headers);
 }
 

@@ -31,5 +31,6 @@ async function deleteFile(filePath) {
 module.exports = {
     uploadFile,
     readFile,
-    getHeaders
+    getHeaders,
+    deleteFile
 }
