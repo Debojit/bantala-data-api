@@ -28,7 +28,12 @@ async function upload(req, res) {
         
         bulkLoad.deleteFile(filePath);
         
-        res.json(salesData);
+        res.status(201)
+           .json({
+                status: 'Success',
+                message: `Successfully uploaded data from file ${filePath}`,
+                data: salesData
+           });
     }
     catch(err) {
         console.log(typeof err)

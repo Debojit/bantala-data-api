@@ -20,7 +20,7 @@ async function getHeaders(worksheet, headerRowIdx = 1) {
     let headers = worksheet.getRow(headerRowIdx).values;
     headers.shift();
     return headers.map((element) => {
-        element = element.replaceAll(' ', '')
+        element = element.replaceAll(' ', '');
         return element.charAt(0).toLowerCase() + element.slice(1);
     });
 }
