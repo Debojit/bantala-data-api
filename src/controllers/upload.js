@@ -14,13 +14,30 @@ const salesFile = multer({
 });
 
 async function upload(req, res) {
-    const filePath = req.file.path;
-    const salesWorkbook = await bulkLoad.readFile(filePath);
-    const salesData = await bulkLoad.getData(salesWorkbook);
-    
-    bulkLoad.deleteFile(filePath);
-    
-    res.json(salesData);
+    try {
+        if(!req.file) {
+            res.status(400)
+            .json({
+                status: 'Error',
+                message: 'No file specified.'
+            });
+        }
+        const filePath = req.file.path;
+        const salesWorkbook = await bulkLoad.readFile(filePath);
+        const salesData = await bulkLoad.getData(salesWorkbook);
+        
+        bulkLoad.deleteFile(filePath);
+        
+        res.json(salesData);
+    }
+    catch(err) {
+        console.log(typeof err)
+        res.status(400)
+           .json({
+                status: 'Error',
+                message: `Upload of file ${req.file.originalname} failed with message: '${err.message}'. Please verify file integrity and try again.`
+           });
+    }
 }
 
 module.exports = {
