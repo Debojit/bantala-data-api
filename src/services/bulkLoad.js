@@ -59,20 +59,19 @@ async function getCellData(cell, cellNum) {
 
 async function getRowData(headers, row) {
     let rowData = {};
-    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
-    if(typeof row.getCell('A').value === 'string' && dateRegex.test(row.getCell('A').value)) {
-        row.eachCell({ includeEmpty: true }, async (cell, cellNum) => {
-            let cellData = await getCellData(cell, cellNum)
-            rowData[headers[cellNum - 1]] = cellData;
-        });
-    }
+    row.eachCell({ includeEmpty: true }, async (cell, cellNum) => {
+        let cellData = await getCellData(cell, cellNum)
+        rowData[headers[cellNum - 1]] = cellData;
+    });
     return rowData;
 }
 
 async function getSheetData(worksheet, headers) {
-    let sheetData = []
+    let sheetData = [];
+    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+    
     worksheet.eachRow(async (row, rowNum) => {
-        if(row.values[row.values.length-1].result) {//If Daily Total is zero, skip row
+        if(typeof row.getCell('A').value === 'string' && dateRegex.test(row.getCell('A').value)) { 
             const rowData = await getRowData(headers, row, rowNum);
             sheetData.push(rowData);
         }
