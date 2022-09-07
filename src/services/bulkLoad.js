@@ -73,7 +73,9 @@ async function getSheetData(worksheet, headers) {
     worksheet.eachRow(async (row, rowNum) => {
         if(typeof row.getCell('A').value === 'string' && dateRegex.test(row.getCell('A').value)) { 
             const rowData = await getRowData(headers, row, rowNum);
-            sheetData.push(rowData);
+            if(rowData.dailyBalance.data !== 0) { //Don't load data for days with no sales & expenditure activity
+                sheetData.push(rowData);
+            }
         }
     });
     return sheetData;
