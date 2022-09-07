@@ -16,9 +16,11 @@ const salesFile = multer({
 async function upload(req, res) {
     const filePath = req.file.path;
     const salesWorkbook = await bulkLoad.readFile(filePath);
-    const headers = await bulkLoad.getHeaders(salesWorkbook.worksheets[0]);
+    const salesData = await bulkLoad.getData(salesWorkbook);
+    
     bulkLoad.deleteFile(filePath);
-    res.json(headers);
+    
+    res.json(salesData);
 }
 
 module.exports = {
