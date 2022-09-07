@@ -31,7 +31,7 @@ async function upload(req, res) {
         res.status(201)
            .json({
                 status: 'Success',
-                message: `Successfully uploaded data from file ${filePath}`,
+                message: `Successfully uploaded data from file ${req.file.originalname}`,
                 data: salesData
            });
     }
