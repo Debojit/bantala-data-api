@@ -26,33 +26,55 @@ async function getHeaders(worksheet, headerRowIdx = 1) {
     });
 }
 
-async function getSheetData(worksheet, headers) {
-    let sheetData = [];
-    worksheet.eachRow((row, rowNum) => {
-        let rowValues = row.values;
-        
-        rowValues.shift();//Remove first empty element
-        rowValues = Array.from(rowValues, itm => itm || 0); //Replace other empty elements with zero
-        
-        const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
-        if(typeof rowValues[0] === 'string' && dateRegex.test(rowValues[0])) {
-            let rowData = {};
+async function getCellData(cell, cellNum) {
+    let cellData = {};
 
-            //Format dates to DD-MM-YYYY string
-            rowValues[0] = formatDate(rowValues[0]);
-            rowValues[1] = formatDate(rowValues[1]);
-            
-            headers.forEach((header, idx) => {
-                //If cell has formula, get its value and substitute
-                if (typeof rowValues[idx] === 'object' && 'formula' in rowValues[idx]) {
-                    rowValues[idx] = 'result' in rowValues[idx] ? rowValues[idx].result : 0;
-                }
-                rowData[header] = rowValues[idx];
-            });
-            
-            if(rowData.cumulativeTotal !== 0) { //Skip dates for which there is no data
-                sheetData.push(rowData);
-            }
+    if (cellNum === 1) {//Format Bengali date string to dd-mm-yyyy
+        cellData.data = formatBengaliDate(cell.value);
+    }
+    if(cellNum === 2) {//First English date object to dd-mm-yyyy
+        cellData.data = formatEnglishDate(cell.value);
+    }
+
+    if(cell.value) {
+        if(typeof cell.value === 'object' && 'formula' in cell.value) {//If cell contains formula, get result
+            cellData.data = cell.value.result ?? 0;
+        }
+        else if(typeof cell.value === 'number') {
+            cellData.data = cell.value;
+        }
+    }
+    else {
+        cellData.data = 0;
+    }
+
+    if(cell.note) {//Read and attach cell comments
+        let noteData = cell.note.texts[1].text.split('\n');
+        noteData.shift();
+        cellData.comments = noteData;
+    }
+    
+    return cellData;
+}
+
+async function getRowData(headers, row) {
+    let rowData = {};
+    const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+    if(typeof row.getCell('A').value === 'string' && dateRegex.test(row.getCell('A').value)) {
+        row.eachCell({ includeEmpty: true }, async (cell, cellNum) => {
+            let cellData = await getCellData(cell, cellNum)
+            rowData[headers[cellNum - 1]] = cellData;
+        });
+    }
+    return rowData;
+}
+
+async function getSheetData(worksheet, headers) {
+    let sheetData = []
+    worksheet.eachRow(async (row, rowNum) => {
+        if(row.values[row.values.length-1].result) {//If Daily Total is zero, skip row
+            const rowData = await getRowData(headers, row, rowNum);
+            sheetData.push(rowData);
         }
     });
     return sheetData;
@@ -68,7 +90,11 @@ async function getData(salesWorkbook) {
     return data;
 }
 
-function formatDate(date) {
+function formatBengaliDate(date) {
+    return date.split('-').reverse().join('-')
+}
+
+function formatEnglishDate(date) {
     date = new Date(date);
     let dateStr = date.toLocaleDateString('en-IN');
     let dateVal = dateStr.split('/');
