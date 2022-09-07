@@ -3,6 +3,7 @@
 const multer = require('multer');
 
 const bulkLoad = require('../services/bulkLoad');
+const SaleModel = require('../models/sales');
 
 const salesFile = multer({
     storage: multer.diskStorage({
@@ -25,7 +26,11 @@ async function upload(req, res) {
         const filePath = req.file.path;
         const salesWorkbook = await bulkLoad.readFile(filePath);
         const salesData = await bulkLoad.getData(salesWorkbook);
-        
+        salesData.forEach(async (salesItem) => {
+            const sales = new SaleModel(salesItem);
+            await sales.save();
+        });
+
         bulkLoad.deleteFile(filePath);
         
         res.status(201)
@@ -36,11 +41,11 @@ async function upload(req, res) {
            });
     }
     catch(err) {
-        console.log(typeof err)
-        res.status(400)
+        console.log(err)
+        res.status(500)
            .json({
                 status: 'Error',
-                message: `Upload of file ${req.file.originalname} failed with message: '${err.message}'. Please verify file integrity and try again.`
+                message: `Upload of file ${req.file.originalname} failed with message: '${err.message}'.`
            });
     }
 }
