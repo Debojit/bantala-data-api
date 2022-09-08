@@ -2,16 +2,24 @@
 
 const SaleModel = require('../models/sales');
 
+function rowMapper(data) {
+    if(!data) {
+        return undefined;
+    }
+    if(data.__v) {
+        delete data.__v; //Remove Mongo document version field.
+    }
+
+    return data;
+}
+
 async function findAll(limit, skip) {
     try {
         let salesData = await SaleModel.find()
                                        .limit(limit)
-                                       .skip(skip);
-        salesData = salesData.map((item) => { //Data Mapping
-            item = item._doc;
-            delete item.__v;
-            return item;
-        });
+                                       .skip(skip)
+                                       .exec();
+        salesData = salesData.map((item) => rowMapper(item._doc)); // Data Mapping
 
         return {
             status: 'Success',
@@ -23,7 +31,28 @@ async function findAll(limit, skip) {
         return {
             status: 'Error',
             errorMessage: err
-        }
+        };
+    }
+}
+
+async function findById(id) {
+    try {
+        let saleItem = await SaleModel.findById(id)
+                                       .exec();
+
+        saleItem = rowMapper(saleItem); // Data Mapping
+
+        return {
+            status: 'Success',
+            data: saleItem
+        };
+    }
+    catch(err) {
+        console.log(err);
+        return {
+            status: 'Error',
+            errorMessage: err
+        };
     }
 }
 
@@ -44,12 +73,13 @@ async function createMany(data) {
         return {
             status: 'Error',
             errorMessage: err
-        }
+        };
     }
 }
 
 module.exports = {
     findAll,
+    findById,
     createOne,
     createMany
 }

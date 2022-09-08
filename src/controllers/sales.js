@@ -29,8 +29,7 @@ async function allSales(req, res) {
                });
             }
             else {
-                res.status(204)
-                   .end();
+                res.sendStatus(204);
             }
         }
         else {
@@ -38,6 +37,36 @@ async function allSales(req, res) {
         }
     }
     catch(err) {
+        console.log(err);
+        res.status(500)
+           .json({
+                status: 'Error',
+                message: `Sales record search failed with error '${err}'`
+           });
+    }
+}
+
+async function getSale(req, res) {
+    try {
+        let saleId = +req.params.id;
+        if (isNaN(saleId) || saleId < 0) { // Parameter validation; must be number
+            res.status(400)
+               .json({
+                        status: 'Error',
+                        message: `Invalid parameter '${req.params.id}', must be a valid positive Number or string representation of the same.`
+                });
+        }
+        
+        let saleItem = await salesService.findById(saleId);
+        if(!saleItem.data) {
+            res.sendStatus(404);
+        }
+        else {
+            res.status(200)
+               .json(saleItem);
+        }
+        
+    } catch(err) {
         console.log(err);
         res.status(500)
            .json({
@@ -91,6 +120,7 @@ async function upload(req, res) {
 
 module.exports = {
     allSales,
+    getSale,
     salesFile,
     upload
 }
