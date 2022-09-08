@@ -3,7 +3,7 @@
 const multer = require('multer');
 
 const bulkLoad = require('../services/bulkLoad');
-const SaleModel = require('../models/sales');
+const salesService = require('../services/sales');
 
 const salesFile = multer({
     storage: multer.diskStorage({
@@ -26,22 +26,28 @@ async function upload(req, res) {
         const filePath = req.file.path;
         const salesWorkbook = await bulkLoad.readFile(filePath);
         const salesData = await bulkLoad.getData(salesWorkbook);
-        salesData.forEach(async (salesItem) => {
-            const sales = new SaleModel(salesItem);
-            await sales.save();
-        });
-
-        bulkLoad.deleteFile(filePath);
         
-        res.status(201)
-           .json({
-                status: 'Success',
-                message: `Successfully uploaded data from file ${req.file.originalname}`,
-                data: salesData
-           });
+        bulkLoad.deleteFile(filePath); //Data loaded from file, deleting....
+
+        let response = await salesService.createMany(salesData);
+
+        if(response.status === 'Success') {
+            res.status(201)
+               .json({
+                       status: 'Success',
+                       message: `${response.recordCount} records successfully loaded from file '${req.file.originalname}'`
+               });
+        }
+        else {
+            res.status(500)
+               .json({
+                       status: 'Success',
+                       message: response.message
+               });
+        }
     }
     catch(err) {
-        console.log(err)
+        console.log(err);
         res.status(500)
            .json({
                 status: 'Error',
