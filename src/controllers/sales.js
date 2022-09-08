@@ -14,6 +14,36 @@ const salesFile = multer({
     })
 });
 
+async function getAll(req, res) {
+    try {
+        let response = await salesService.findAll();
+        if(response.status === 'Success') {
+            if(response.data.length > 0) {
+                res.status(200)
+               .json({
+                    status: 'Success',
+                    data: response.data
+               });
+            }
+            else {
+                res.status(204)
+                   .end();
+            }
+        }
+        else {
+            throw response.errorMessage.err;
+        }
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500)
+           .json({
+                status: 'Error',
+                message: `Sales record search failed with error ${err.message}`
+           });
+    }
+}
+
 async function upload(req, res) {
     try {
         if(!req.file) {
@@ -42,7 +72,7 @@ async function upload(req, res) {
             res.status(500)
                .json({
                        status: 'Success',
-                       message: response.message
+                       message: response.errorMessage.message
                });
         }
     }
@@ -57,6 +87,7 @@ async function upload(req, res) {
 }
 
 module.exports = {
+    getAll,
     salesFile,
     upload
 }

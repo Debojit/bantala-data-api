@@ -2,6 +2,24 @@
 
 const SaleModel = require('../models/sales');
 
+async function findAll() {
+    try {
+        let salesData = await SaleModel.find();
+        let response = {
+            status: 'Success',
+            data: salesData 
+        }
+        return response;
+    }
+    catch(err) {
+        console.log(err);
+        return {
+            status: 'Error',
+            errorMessage: err
+        }
+    }
+}
+
 async function createOne(data) {
     //TODO: Not implemented
 }
@@ -17,13 +35,14 @@ async function createMany(data) {
     }
     catch(err) {
         return {
-            status: 'Error' ,
-            message: `Data insertion failed with error message: ${err.message}`
+            status: 'Error',
+            errorMessage: err
         }
     }
 }
 
 module.exports = {
+    findAll,
     createOne,
     createMany
 }
