@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 
+const connection = require('./connection');
+
 const CellDataSchema = new mongoose.Schema({
     data: {
         type: mongoose.Schema.Types.Mixed,
@@ -59,6 +61,6 @@ const SaleSchema = new mongoose.Schema({
         required: true
     }
 });
-const SaleModel = mongoose.model('Sale', SaleSchema);
+const SaleModel = connection.model('Sale', SaleSchema);
 
 module.exports = SaleModel;
