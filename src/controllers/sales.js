@@ -49,23 +49,23 @@ async function allSales(req, res) {
 async function getSale(req, res) {
     try {
         let saleId = +req.params.id;
-        if (isNaN(saleId) || saleId < 0) { // Parameter validation; must be number
+        if (isNaN(saleId)) { // Parameter validation; must be number
             res.status(400)
                .json({
                         status: 'Error',
                         message: `Invalid parameter '${req.params.id}', must be a valid positive Number or string representation of the same.`
                 });
         }
-        
-        let saleItem = await salesService.findById(saleId);
-        if(!saleItem.data) {
-            res.sendStatus(404);
-        }
         else {
-            res.status(200)
-               .json(saleItem);
+            let saleItem = await salesService.findById(saleId);
+            if(!saleItem.data) {
+                res.sendStatus(404);
+            }
+            else {
+                res.status(200)
+                .json(saleItem);
+            }
         }
-        
     } catch(err) {
         console.log(err);
         res.status(500)
