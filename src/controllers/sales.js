@@ -2,7 +2,7 @@
 
 const multer = require('multer');
 
-const {apiConfig} = require('../configs/api')
+const apiConfig = require('../configs/api')
 const bulkLoad = require('../services/bulkLoad');
 const salesService = require('../services/sales');
 
