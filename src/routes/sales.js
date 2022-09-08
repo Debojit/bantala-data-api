@@ -2,7 +2,7 @@
 
 const express = require('express');
 
-const {upload, salesFile} = require('../controllers/upload');
+const {upload, salesFile} = require('../controllers/sales');
 
 const router = express.Router();
 
