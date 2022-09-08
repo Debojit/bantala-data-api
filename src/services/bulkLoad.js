@@ -60,6 +60,9 @@ async function getCellData(cell, cellNum) {
 async function getRowData(headers, row) {
     let rowData = {};
     row.eachCell({ includeEmpty: true }, async (cell, cellNum) => {
+        if(cellNum === 1) { //Create row id from bengali date
+            rowData._id = +cell.value.split('-').reverse().join('');
+        }
         let cellData = await getCellData(cell, cellNum)
         rowData[headers[cellNum - 1]] = cellData;
     });
