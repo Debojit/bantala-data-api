@@ -2,9 +2,11 @@
 
 const SaleModel = require('../models/sales');
 
-async function findAll() {
+async function findAll(limit, skip) {
     try {
-        let salesData = await SaleModel.find();
+        let salesData = await SaleModel.find()
+                                       .limit(limit)
+                                       .skip(skip);
         salesData = salesData.map((item) => { //Data Mapping
             item = item._doc;
             delete item.__v;

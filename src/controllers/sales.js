@@ -16,7 +16,9 @@ const salesFile = multer({
 
 async function getAll(req, res) {
     try {
-        let response = await salesService.findAll();
+        const limit = req.query.limit || process.env.DEFAULT_PAGE_SIZE;
+        const skip = req.query.skip || process.env.SKIP;
+        let response = await salesService.findAll(limit, skip);
         if(response.status === 'Success') {
             if(response.data.length > 0) {
                 res.status(200)
