@@ -11,7 +11,7 @@ const CellDataSchema = new mongoose.Schema({
         type: [String],
         required: false
     }
-});
+}, { _id : false }); //Skip id for field-level properties
 const SaleSchema = new mongoose.Schema({
     bengaliDate: {
         type: CellDataSchema,
