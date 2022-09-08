@@ -6,7 +6,7 @@ const express = require('express');
 dotenv.config();
 const salesRouter = require('./routes/sales');
 
-const dbConfig = require('./models/db.config')
+const dbConfig = require('./configs/db.config')
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;

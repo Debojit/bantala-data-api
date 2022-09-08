@@ -2,6 +2,7 @@
 
 const multer = require('multer');
 
+const {apiConfig} = require('../configs/api')
 const bulkLoad = require('../services/bulkLoad');
 const salesService = require('../services/sales');
 
@@ -14,10 +15,10 @@ const salesFile = multer({
     })
 });
 
-async function getAll(req, res) {
+async function allSales(req, res) {
     try {
-        const limit = req.query.limit || process.env.DEFAULT_PAGE_SIZE;
-        const skip = req.query.skip || process.env.SKIP;
+        const limit = req.query.limit || apiConfig.defaultPageSize;
+        const skip = req.query.skip || apiConfig.defaultSkipValue;
         let response = await salesService.findAll(limit, skip);
         if(response.status === 'Success') {
             if(response.data.length > 0) {
@@ -89,7 +90,7 @@ async function upload(req, res) {
 }
 
 module.exports = {
-    getAll,
+    allSales,
     salesFile,
     upload
 }

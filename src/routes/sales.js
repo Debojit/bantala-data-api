@@ -2,11 +2,11 @@
 
 const express = require('express');
 
-const {getAll, upload, salesFile} = require('../controllers/sales');
+const {allSales, upload, salesFile} = require('../controllers/sales');
 
 const router = express.Router();
 
-router.get('/', getAll);
+router.get('/', allSales);
 
 router.post('/upload', salesFile.single('salesData'), upload);
 
