@@ -6,10 +6,11 @@ function rowMapper(data) {
     if(!data) {
         return undefined;
     }
-    if(data.__v) {
+    
+    if('__v' in data) {
         delete data.__v; //Remove Mongo document version field.
     }
-
+    
     return data;
 }
 
@@ -39,9 +40,9 @@ async function findById(id) {
     try {
         let saleItem = await SaleModel.findById(id)
                                        .exec();
-
-        saleItem = rowMapper(saleItem); // Data Mapping
-
+        
+        saleItem = rowMapper(saleItem._doc); // Data Mapping
+        
         return {
             status: 'Success',
             data: saleItem
