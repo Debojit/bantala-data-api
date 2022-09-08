@@ -9,7 +9,8 @@ const CellDataSchema = new mongoose.Schema({
     },
     comments: {
         type: [String],
-        required: false
+        required: false,
+        default: undefined
     }
 }, { _id : false }); //Skip id for field-level properties
 const SaleSchema = new mongoose.Schema({
