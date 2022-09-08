@@ -39,7 +39,7 @@ async function getAll(req, res) {
         res.status(500)
            .json({
                 status: 'Error',
-                message: `Sales record search failed with error ${err.message}`
+                message: `Sales record search failed with error '${err}'`
            });
     }
 }

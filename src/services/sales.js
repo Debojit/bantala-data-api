@@ -5,11 +5,16 @@ const SaleModel = require('../models/sales');
 async function findAll() {
     try {
         let salesData = await SaleModel.find();
-        let response = {
+        salesData = salesData.map((item) => { //Data Mapping
+            item = item._doc;
+            delete item.__v;
+            return item;
+        });
+
+        return {
             status: 'Success',
             data: salesData 
-        }
-        return response;
+        };
     }
     catch(err) {
         console.log(err);
