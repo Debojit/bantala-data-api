@@ -38,7 +38,7 @@ async function findAll(url, page, size) {
             status: 'Success',
             data: salesData,
             _links : {
-                prev: page === '1' ? undefined : `${url}?page=${page - 1}&size=${size}`,
+                prev: page === 1 ? undefined : `${url}?page=${page - 1}&size=${size}`,
                 current: `${url}?page=${page}&size=${size}`,
                 next: page * size < totalDocs ? `${url}?page=${+page + 1}&size=${size}` : undefined
             }
