@@ -76,6 +76,20 @@ async function getSale(req, res) {
     }
 }
 
+async function createSalesItems(req, res) {
+    try {
+        console.log(req.body);
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500)
+           .json({
+                status: 'Error',
+                message: `Sales record creation failed with error '${err}'`
+           });
+    }
+}
+
 async function upload(req, res) {
     try {
         if(!req.file) {
@@ -119,8 +133,9 @@ async function upload(req, res) {
 }
 
 module.exports = {
+    salesFile,
     allSales,
     getSale,
-    salesFile,
+    createSalesItems,
     upload
 }
