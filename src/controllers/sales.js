@@ -49,6 +49,7 @@ async function allSales(req, res) {
 async function getSale(req, res) {
     try {
         let saleId = +req.params.id;
+        let reqUrl = `${req.protocol}://${req.hostname}:${process.env.APP_PORT}${req.originalUrl}`
         if (isNaN(saleId)) { // Parameter validation; must be number
             res.status(400)
                .json({
@@ -58,6 +59,9 @@ async function getSale(req, res) {
         }
         else {
             let saleItem = await salesService.findById(saleId);
+            saleItem.links = {
+                self : reqUrl
+            };
             if(!saleItem.data) {
                 res.sendStatus(404);
             }
