@@ -2,7 +2,7 @@
 
 const SaleModel = require('../models/sales');
 
-function rowMapper(url, data) {
+function rowMapper(data) {
     if(!data) {
         return undefined;
     }
@@ -15,27 +15,33 @@ function rowMapper(url, data) {
     if('__v' in data) {
         delete data.__v; //Remove Mongo document version field
     }
-    
-    if(url) { // Add urls
-        data._links = {
-            self: url + '/' + data._id
-        }
-    }
 
     return data;
 }
 
-async function findAll(limit, skip) {
+async function findAll(url, page, size) {
     try {
         let salesData = await SaleModel.find()
-                                       .limit(limit)
-                                       .skip(skip)
+                                       .limit(size)
+                                       .skip((page - 1) * size)
                                        .exec();
-        salesData = salesData.map((item) => rowMapper(item._doc)); // Data Mapping
+        const totalDocs = await SaleModel.countDocuments();
+        salesData = salesData.map((item) => {
+            item = rowMapper(item._doc);
+            item._links = {
+                self: url + '/' + item.id
+            }
+            return item;
+        }); // Data Mapping
 
         return {
             status: 'Success',
-            data: salesData 
+            data: salesData,
+            _links : {
+                prev: page === '1' ? undefined : `${url}?page=${page - 1}&size=${size}`,
+                current: `${url}?page=${page}&size=${size}`,
+                next: page * size < totalDocs ? `${url}?page=${+page + 1}&size=${size}` : undefined
+            }
         };
     }
     catch(err) {
@@ -52,8 +58,10 @@ async function findById(url, id) {
         let saleItem = await SaleModel.findById(id)
                                        .exec();
         
-        saleItem = rowMapper(url, saleItem._doc); // Data Mapping
-        
+        saleItem = rowMapper(saleItem._doc); // Data Mapping
+        saleItem._links = {
+            self: url + '/' + saleItem.id
+        }
         return {
             status: 'Success',
             data: saleItem

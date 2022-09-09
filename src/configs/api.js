@@ -3,6 +3,6 @@
 var apiConfig = {};
 
 apiConfig.defaultPageSize = 10;
-apiConfig.defaultSkipValue = 0;
+apiConfig.defaultPage = 1;
 
-module.exports = apiConfig
+module.exports = apiConfig;
