@@ -7,6 +7,11 @@ function rowMapper(url, data) {
         return undefined;
     }
     
+    if(data._id) {// Rename '_id' property
+        data.id = data._id;
+        delete data._id;
+    }
+
     if('__v' in data) {
         delete data.__v; //Remove Mongo document version field
     }
