@@ -8,7 +8,7 @@ function rowMapper(url, data) {
     }
     
     if(data._id) {// Rename '_id' property
-        data.id = data._id;
+        data = {id: data._id, ...data};
         delete data._id;
     }
 
