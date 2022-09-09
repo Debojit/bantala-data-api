@@ -23,10 +23,7 @@ async function allSales(req, res) {
         if(response.status === 'Success') {
             if(response.data.length > 0) {
                 res.status(200)
-               .json({
-                    status: 'Success',
-                    data: response.data
-               });
+               .json(response);
             }
             else {
                 res.sendStatus(204);
@@ -49,7 +46,7 @@ async function allSales(req, res) {
 async function getSale(req, res) {
     try {
         let saleId = +req.params.id;
-        let reqUrl = `${req.protocol}://${req.hostname}:${process.env.APP_PORT}${req.originalUrl}`
+        const rootUrl = `${req.protocol}://${req.hostname}:${process.env.APP_PORT}/sales`;
         if (isNaN(saleId)) { // Parameter validation; must be number
             res.status(400)
                .json({
@@ -58,16 +55,13 @@ async function getSale(req, res) {
                 });
         }
         else {
-            let saleItem = await salesService.findById(saleId);
-            saleItem.links = {
-                self : reqUrl
-            };
+            let saleItem = await salesService.findById(rootUrl, saleId);
             if(!saleItem.data) {
                 res.sendStatus(404);
             }
             else {
                 res.status(200)
-                .json(saleItem);
+                   .json(saleItem);
             }
         }
     } catch(err) {

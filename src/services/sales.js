@@ -2,15 +2,21 @@
 
 const SaleModel = require('../models/sales');
 
-function rowMapper(data) {
+function rowMapper(url, data) {
     if(!data) {
         return undefined;
     }
     
     if('__v' in data) {
-        delete data.__v; //Remove Mongo document version field.
+        delete data.__v; //Remove Mongo document version field
     }
     
+    if(url) { // Add urls
+        data._links = {
+            self: url + '/' + data._id
+        }
+    }
+
     return data;
 }
 
@@ -36,12 +42,12 @@ async function findAll(limit, skip) {
     }
 }
 
-async function findById(id) {
+async function findById(url, id) {
     try {
         let saleItem = await SaleModel.findById(id)
                                        .exec();
         
-        saleItem = rowMapper(saleItem._doc); // Data Mapping
+        saleItem = rowMapper(url, saleItem._doc); // Data Mapping
         
         return {
             status: 'Success',
