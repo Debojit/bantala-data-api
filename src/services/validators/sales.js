@@ -16,7 +16,7 @@ async function validateRequestPayload(data) {
         }
         if(!apiConfig.bengaliDateRegex.createSales.test(data.bengaliDate)) {
             validationMessage.fieldName = 'bengaliDate';
-            validationMessage.message = 'Data in \'bengaliDate\' must be of the form YYYY-MM-DD, e.g. 1429-01-01';
+            validationMessage.message = 'Data in \'bengaliDate\' must be of the form DD-MM-YYYY, e.g. 01-01-1429';
             validationStatus.push(validationMessage);
         }
     }
@@ -27,6 +27,24 @@ async function validateRequestPayload(data) {
     }
 
     //English Date
+    if('englishDate' in data) {
+        data.bengaliDate = data.bengaliDate ?? 'NA';
+        if(data.bengaliDate === 'NA') {
+            validationMessage.fieldName = 'englishDate';
+            validationMessage.message = 'Field \'englishDate\' is mandatory';
+            validationStatus.push(validationMessage);
+        }
+        if(!apiConfig.bengaliDateRegex.createSales.test(data.bengaliDate)) {
+            validationMessage.fieldName = 'englishDate';
+            validationMessage.message = 'Data in \'englishDate\' must be of the form YYYY-MM-DD, e.g. 1429-01-01';
+            validationStatus.push(validationMessage);
+        }
+    }
+    else {
+        validationMessage.fieldName = 'englishDate';
+        validationMessage.message = 'Field \'englishDate\' is mandatory';
+        validationStatus.push(validationMessage);
+    }
     //Sales
     //Guard Deposit
     //Other Cash
