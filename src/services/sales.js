@@ -4,23 +4,6 @@ const SaleModel = require('../models/sales');
 
 const salesMapper = require('./mapping/sales')
 
-function rowMapper(data) {
-    if(!data) {
-        return undefined;
-    }
-    
-    if(data._id) {// Rename '_id' property
-        data = {id: data._id, ...data};
-        delete data._id;
-    }
-
-    if('__v' in data) {
-        delete data.__v; //Remove Mongo document version field
-    }
-
-    return data;
-}
-
 async function findAll(url, page, size) {
     try {
         let salesData = await SaleModel.find()
@@ -90,17 +73,19 @@ async function createOne(data) {
 
 async function createMany(data) {
     try {
+        data = data.map((element) => salesMapper.mapCreateRequestToModel(element));
+        
         let response = await SaleModel.insertMany(data);
         return {
             status: 'Success',
             recordCount: response.length,
-            data: response
+            data: response  
         };
     }
     catch(err) {
         return {
             status: 'Error',
-            errorMessage: err
+                errorMessage: 'Error creating sales data records' //TODO: Replace with proper message
         };
     }
 }

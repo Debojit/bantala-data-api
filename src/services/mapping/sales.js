@@ -18,7 +18,15 @@ function mapModelToFindResponse(data) {
 }
 
 function mapCreateRequestToModel(data) {
+    if('bengaliDate' in data) {
+        data._id = +data.bengaliDate.replaceAll('-','');
+    }
 
+    if('englishDate' in data) {
+        data.englishDate = new Date(data.englishDate.split('-').reverse().join('-'));
+    }
+
+    return data;
 }
 
 module.exports = {

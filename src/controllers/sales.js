@@ -78,7 +78,34 @@ async function getSale(req, res) {
 
 async function createSalesItems(req, res) {
     try {
-        console.log(req.body);
+        if(req.body.constructor.name === 'Object') {
+            //Call create one service
+        }
+        else if (req.body.constructor.name === 'Array') {
+            //Validate Req Body
+            let response = await salesService.createMany(req.body);
+
+            if(response.status === 'Success') {
+                res.status(201)
+                .json({
+                        status: 'Success'
+                });
+            }
+            else {
+                res.status(400)
+                .json({
+                        status: response.status,
+                        message: response.errorMessage
+                });
+            }
+        }
+        else {
+            res.status(400)
+               .json({
+                    status: 'Error',
+                    message: 'Invalid request body. Can be only be valid JSON objects or an array of objects.'
+               });
+        }
     }
     catch(err) {
         console.log(err);
@@ -117,7 +144,7 @@ async function upload(req, res) {
         else {
             res.status(500)
                .json({
-                       status: 'Success',
+                       status: 'Error',
                        message: response.errorMessage.message
                });
         }
