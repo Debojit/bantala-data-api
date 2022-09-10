@@ -2,6 +2,8 @@
 
 const SaleModel = require('../models/sales');
 
+const salesMapper = require('./mapping/sales')
+
 function rowMapper(data) {
     if(!data) {
         return undefined;
@@ -27,7 +29,7 @@ async function findAll(url, page, size) {
                                        .exec();
         const totalDocs = await SaleModel.countDocuments();
         salesData = salesData.map((item) => {
-            item = rowMapper(item._doc);
+            item = salesMapper.mapModelToFindResponse(item._doc);
             item._links = {
                 self: url + '/' + item.id
             }
@@ -57,15 +59,21 @@ async function findById(url, id) {
     try {
         let saleItem = await SaleModel.findById(id)
                                        .exec();
-        
-        saleItem = rowMapper(saleItem._doc); // Data Mapping
-        saleItem._links = {
-            self: url + '/' + saleItem.id
+        if(saleItem) {
+            saleItem = salesMapper.mapModelToFindResponse(saleItem._doc); // Data Mapping
+            saleItem._links = {
+                self: url + '/' + saleItem.id
+            }
+            return {
+                status: 'Success',
+                data: saleItem
+            };
         }
-        return {
-            status: 'Success',
-            data: saleItem
-        };
+        else {
+            return {
+                status: 'Failure'
+            }
+        }
     }
     catch(err) {
         console.log(err);
