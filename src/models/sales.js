@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const connection = require('./connection');
 
-const CellDataSchema = new mongoose.Schema({
+const DataItemSchema = new mongoose.Schema({
     data: {
         type: mongoose.Schema.Types.Mixed,
         required: true
@@ -21,47 +21,47 @@ const SaleSchema = new mongoose.Schema({
         required: true
     },
     bengaliDate: {
-        type: CellDataSchema,
+        type: String,
         required: true
     },
     englishDate: {
-        type: CellDataSchema,
+        type: Date,
         required: true
     },
     sales: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     guardDeposit: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     otherCash: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     netDailyIncome: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     dailyExpense: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     otherDeductions: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     totalDeductions: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     dailyBalance: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     },
     cumulativeTotal: {
-        type: CellDataSchema,
+        type: DataItemSchema,
         required: true
     }
 });
