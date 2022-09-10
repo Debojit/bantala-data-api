@@ -3,7 +3,7 @@
 const multer = require('multer');
 
 const apiConfig = require('../configs/api')
-const bulkLoad = require('../services/bulkLoad');
+const uploadService = require('../services/sales.upload');
 const salesService = require('../services/sales');
 
 const salesFile = multer({
@@ -100,10 +100,10 @@ async function upload(req, res) {
             });
         }
         const filePath = req.file.path;
-        const salesWorkbook = await bulkLoad.readFile(filePath);
-        const salesData = await bulkLoad.getData(salesWorkbook);
+        const salesWorkbook = await uploadService.readFile(filePath);
+        const salesData = await uploadService.getData(salesWorkbook);
         
-        bulkLoad.deleteFile(filePath); //Data loaded from file, deleting....
+        uploadService.deleteFile(filePath); //Data loaded from file, deleting....
 
         let response = await salesService.createMany(salesData);
 
