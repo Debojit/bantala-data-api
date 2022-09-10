@@ -56,7 +56,7 @@ async function mapRowToObject(headers, row) {
 
 async function mapSheetToObject(worksheet, headers) {
     let sheetData = [];
-    const dateRegex = apiConfig.bengaliDateRegex.spreadSheet;
+    const dateRegex = apiConfig.regex.bengaliDate.spreadSheet;
     
     worksheet.eachRow(async (row, rowNum) => {
         if(typeof row.getCell('A').value === 'string' && dateRegex.test(row.getCell('A').value)) { 
