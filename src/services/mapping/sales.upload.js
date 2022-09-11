@@ -56,10 +56,10 @@ async function mapRowToObject(headers, row) {
 
 async function mapSheetToObject(worksheet, headers) {
     let sheetData = [];
-    const dateRegex = apiConfig.regex.bengaliDate.spreadSheet;
+    const bengaliDateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[012])$/;
     
     worksheet.eachRow(async (row, rowNum) => {
-        if(typeof row.getCell('A').value === 'string' && dateRegex.test(row.getCell('A').value)) { 
+        if(typeof row.getCell('A').value === 'string' && bengaliDateRegex.test(row.getCell('A').value)) { 
             const rowData = await mapRowToObject(headers, row, rowNum);
             if(rowData.dailyBalance.data !== 0) { //Don't load data for days with no sales & expenditure activity
                 sheetData.push(rowData);
