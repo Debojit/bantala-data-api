@@ -2,6 +2,7 @@
 
 const express = require('express');
 
+const salesUploadMw = require('../middleware/upload');
 const salesController = require('../controllers/sales');
 
 const router = express.Router();
@@ -15,6 +16,6 @@ router.get('/:id', salesController.getSale);
 
 router.post('/', salesController.createSalesItems);
 
-router.post('/upload', salesController.salesFile.single('salesData'), salesController.upload);
+router.post('/upload', salesUploadMw.salesFile.single('salesData'), salesController.upload);
 
 module.exports = router;

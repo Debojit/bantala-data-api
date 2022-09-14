@@ -1,19 +1,8 @@
 'use strict'
 
-const multer = require('multer');
-
 const apiConfig = require('../configs/api')
 const uploadService = require('../services/sales.upload');
 const salesService = require('../services/sales');
-
-const salesFile = multer({
-    storage: multer.diskStorage({
-        destination: '/tmp/sales',
-        filename: (req, file, cb) => {
-            cb(null, file.originalname + '_' + Date.now() + '_' + Math.floor(Math.random() * 10000000));
-        }
-    })
-});
 
 async function allSales(req, res) {
     try {
@@ -159,7 +148,6 @@ async function upload(req, res) {
 }
 
 module.exports = {
-    salesFile,
     allSales,
     getSale,
     createSalesItems,
