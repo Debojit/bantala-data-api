@@ -77,7 +77,8 @@ async function createSalesItems(req, res) {
             if(response.status === 'Success') {
                 res.status(201)
                 .json({
-                        status: 'Success'
+                        status: 'Success',
+                        data: response.data
                 });
             }
             else {

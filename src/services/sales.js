@@ -12,7 +12,7 @@ async function findAll(url, page, size) {
                                        .exec();
         const totalDocs = await SaleModel.countDocuments();
         salesData = salesData.map((item) => {
-            item = salesMapper.mapModelToFindResponse(item._doc);
+            item = salesMapper.mapModelToResponse(item._doc);
             item._links = {
                 self: url + '/' + item.id
             }
@@ -43,7 +43,7 @@ async function findById(url, id) {
         let saleItem = await SaleModel.findById(id)
                                        .exec();
         if(saleItem) {
-            saleItem = salesMapper.mapModelToFindResponse(saleItem._doc); // Data Mapping
+            saleItem = salesMapper.mapModelToResponse(saleItem._doc); // Data Mapping
             saleItem._links = {
                 self: url + '/' + saleItem.id
             }
@@ -79,7 +79,7 @@ async function createMany(data) {
         return {
             status: 'Success',
             recordCount: response.length,
-            data: response  
+            data: response.map(item => salesMapper.mapModelToResponse(item._doc))
         };
     }
     catch(err) {
