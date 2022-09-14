@@ -2,7 +2,7 @@
 
 const SaleModel = require('../models/sales');
 
-const salesMapper = require('./mapping/sales')
+const salesMapper = require('../mapping/sales')
 
 async function findAll(url, page, size) {
     try {

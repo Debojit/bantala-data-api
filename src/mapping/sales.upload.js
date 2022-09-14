@@ -1,6 +1,6 @@
 'use strict'
 
-const apiConfig = require('../../configs/api');
+const apiConfig = require('../configs/api');
 
 async function mapWorksheetToHeaders(worksheet, headerRowIdx = 1) {
     let headers = worksheet.getRow(headerRowIdx).values;

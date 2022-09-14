@@ -3,7 +3,7 @@
 const excel = require('exceljs');
 const fs = require('fs');
 
-const uploadMapper = require('./mapping/sales.upload')
+const uploadMapper = require('../mapping/sales.upload')
 
 async function readFile(filePath) {
     const salesFile = new excel.Workbook();
