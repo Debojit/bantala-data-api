@@ -1,7 +1,5 @@
 'use strict'
 
-const apiConfig = require('../../configs/api');
-
 async function validateRequestPayload(data) {
     let validationStatus = [];
     let validationMessage = {};
@@ -54,7 +52,7 @@ async function validateRequestPayload(data) {
         data.sales = data.sales ?? 'NA';
         if(data.sales === 'NA') {
             validationMessage.fieldName = 'sales';
-            validationMessage.message = 'Field \'englishDate\' is mandatory';
+            validationMessage.message = 'Field \'sales\' is mandatory';
             validationStatus.push(validationMessage);
         }
         if(!salesRegex.test(data.sales)) {
@@ -70,7 +68,47 @@ async function validateRequestPayload(data) {
     }
 
     //Guard Deposit
+    const guardDepositRegex = /\d{1,10}[\.\d{2}]*/;
+    if('guardDeposit' in data) {
+        data.guardDeposit = data.guardDeposit ?? 'NA';
+        if(data.guardDeposit === 'NA') {
+            validationMessage.fieldName = 'guardDeposit';
+            validationMessage.message = 'Field \'guardDeposit\' is mandatory';
+            validationStatus.push(validationMessage);
+        }
+        if(!guardDepositRegex.test(data.guardDeposit)) {
+            validationMessage.fieldName = 'guardDeposit';
+            validationMessage.message = 'Data in \'guardDeposit\' must be a valid 10-digit number with exactly two decimal values. e.g. 9999999999.99';
+            validationStatus.push(validationMessage);
+        }
+    }
+    else {
+        validationMessage.fieldName = 'guardDeposit';
+        validationMessage.message = 'Field \'guardDeposit\' is mandatory';
+        validationStatus.push(validationMessage);
+    }
+
     //Other Cash
+    const otherCashRegex = /\d{1,10}[\.\d{2}]*/;
+    if('otherCash' in data) {
+        data.otherCash = data.otherCash ?? 'NA';
+        if(data.otherCash === 'NA') {
+            validationMessage.fieldName = 'otherCash';
+            validationMessage.message = 'Field \'otherCash\' is mandatory';
+            validationStatus.push(validationMessage);
+        }
+        if(!otherCashRegex.test(data.otherCash)) {
+            validationMessage.fieldName = 'otherCash';
+            validationMessage.message = 'Data in \'otherCash\' must be a valid 10-digit number with exactly two decimal values. e.g. 9999999999.99';
+            validationStatus.push(validationMessage);
+        }
+    }
+    else {
+        validationMessage.fieldName = 'otherCash';
+        validationMessage.message = 'Field \'otherCash\' is mandatory';
+        validationStatus.push(validationMessage);
+    }
+
     //Net Daily Income
     //Daily Expense
     //Other Deductions
