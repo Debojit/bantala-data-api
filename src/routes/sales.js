@@ -18,4 +18,10 @@ router.post('/', salesController.createSalesItems);
 
 router.post('/upload', salesUploadMw.salesFile.single('salesData'), salesController.upload);
 
+// router.put('/:id', salesController.updateSaleItem);
+
+// router.patch('/', salesController.findUpdateSaleItem);
+
+// router.delete('/:id', salesController.deleteSaleItem);
+
 module.exports = router;
