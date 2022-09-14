@@ -23,7 +23,9 @@ function mapCreateRequestToModel(data) {
     }
 
     if('englishDate' in data) {
-        data.englishDate = new Date(data.englishDate.split('-').reverse().join('-'));
+        if(data.englishDate.constructor.name === 'String') {
+            data.englishDate = new Date(data.englishDate.split('-').reverse().join('-'));
+        }
     }
 
     return data;

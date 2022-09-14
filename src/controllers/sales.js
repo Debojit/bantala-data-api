@@ -133,7 +133,6 @@ async function upload(req, res) {
         uploadService.deleteFile(filePath); //Data loaded from file, deleting....
 
         let response = await salesService.createMany(salesData);
-
         if(response.status === 'Success') {
             res.status(201)
                .json({

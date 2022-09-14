@@ -83,10 +83,19 @@ async function createMany(data) {
         };
     }
     catch(err) {
-        return {
-            status: 'Error',
-                errorMessage: 'Error creating sales data records' //TODO: Replace with proper message
-        };
+        console.log(err)
+        if(err instanceof TypeError) {
+            return {
+                status: 'Error',
+                    errorMessage: err.message
+            };
+        }
+        else { // Catchall error
+            return {
+                status: 'Error',
+                    errorMessage: 'Error creating sales data records. Please refer the logs for details.'
+            };
+        }
     }
 }
 
