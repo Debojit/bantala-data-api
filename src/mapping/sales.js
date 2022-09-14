@@ -19,7 +19,7 @@ function mapModelToFindResponse(data) {
 
 function mapCreateRequestToModel(data) {
     if('bengaliDate' in data) {
-        data._id = +data.bengaliDate.replaceAll('-','');
+        data._id = +data.bengaliDate.split('-').reverse().join('');
     }
 
     if('englishDate' in data) {
